@@ -2,6 +2,12 @@
 
 本地邮件日历管家：通过 IMAP 读取邮箱，把邮件中的面试、测评、会议、截止日期自动清洗成日历事件，提供 HTML 日历界面，并同时暴露 REST API 和 MCP，供 Codex 等工具调用。
 
+## 博客教程
+
+详细教程：[秋招自救指南：用 MailCal 把 QQ 邮箱变成 AI 日历，面试测评自动进日程](https://blog.csdn.net/web14786210723/article/details/163896820?spm=1001.2014.3001.5502)
+
+QQ 邮箱授权码配置：[QQ 邮箱 IMAP 配置教程](https://blog.csdn.net/web14786210723/article/details/163896750?spm=1011.2124.3001.6209)
+
 ## 开源与联系
 
 MailCal 已开源，欢迎 Star 和 Issue 反馈。
@@ -56,12 +62,6 @@ python src/app.py --host 127.0.0.1 --port 5173
 首次启动会自动生成 `config.json`；也可以复制 `config.example.json` 手动填写邮箱授权码和模型配置。
 
 Windows 可直接运行 `scripts/start.bat` 或 `scripts/start.ps1`。
-
-## 博客教程
-
-详细教程：[秋招自救指南：用 MailCal 把 QQ 邮箱变成 AI 日历，面试测评自动进日程](https://blog.csdn.net/web14786210723/article/details/163896820?spm=1001.2014.3001.5502)
-
-QQ 邮箱授权码配置：[QQ 邮箱 IMAP 配置教程](https://blog.csdn.net/web14786210723/article/details/163896750?spm=1011.2124.3001.6209)
 
 ## REST API
 
