@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/mailcal/event.schema.json",
+  "title": "Normalized Calendar Event",
+  "type": "object",
+  "required": ["title", "start", "end", "type"],
+  "properties": {
+    "id": {"type": "string"},
+    "email_uid": {"type": "string", "description": "来源邮件的 IMAP UID"},
+    "email_url": {"type": "string", "description": "邮箱网页入口"},
+    "email_web_url": {"type": "string", "description": "邮箱网页入口"},
+    "email_download_url": {"type": "string", "description": "原始邮件下载地址"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 60},
+    "start": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$"},
+    "end": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$"},
+    "all_day": {"type": "boolean"},
+    "type": {"enum": ["interview", "assessment", "event", "meeting", "deadline", "other"]},
+    "color": {"type": "string"},
+    "status": {"enum": ["auto", "upcoming", "ongoing", "overdue", "done", "cancelled"]},
+    "estimated": {"type": "boolean"},
+    "date_source": {"type": "string", "description": "时间来源：邮件日期、明确时间或规则推断"},
+    "source_subject": {"type": "string"},
+    "source_from": {"type": "string"},
+    "description": {"type": "string", "maxLength": 20000},
+    "source_body": {"type": "string"},
+    "source_html": {"type": "string", "description": "原始 HTML 正文，供沙箱 iframe 渲染"},
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "label"],
+        "properties": {
+          "url": {"type": "string"},
+          "label": {"type": "string"},
+          "context": {"type": "string"}
+        }
+      }
+    }
+  }
+}

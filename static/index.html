@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MailCal</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="4" width="18" height="17" rx="3" />
+            <path d="M8 2v4M16 2v4M3 9h18" />
+          </svg>
+        </span>
+        <div>
+          <strong>MailCal</strong>
+          <span>QQ 邮箱日程 · 邮件日历管家</span>
+        </div>
+      </div>
+
+      <nav class="view-switch" aria-label="日历视图">
+        <button class="view-btn active" data-view="month">月视图</button>
+        <button class="view-btn" data-view="week">周视图</button>
+      </nav>
+
+      <div class="topbar-actions">
+        <button id="admin-btn" class="btn btn-secondary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+          </svg>
+          后台
+        </button>
+        <button id="add-event-btn" class="btn btn-secondary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          添加事件
+        </button>
+        <button id="sync-btn" class="btn btn-primary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20 11a8 8 0 1 0-2.3 6.2" />
+            <path d="M20 5v6h-6" />
+          </svg>
+          同步邮件
+        </button>
+        <button id="settings-btn" class="icon-btn" type="button" aria-label="设置">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="side-rail">
+        <section class="today-block">
+          <p class="eyebrow">今天</p>
+          <h2 id="today-date">--</h2>
+          <p id="today-count" class="muted">加载中</p>
+        </section>
+
+        <section class="rail-section">
+          <div class="section-head">
+            <h3>即将到来</h3>
+          </div>
+          <div id="upcoming-list" class="upcoming-list"></div>
+        </section>
+
+        <section class="rail-section sync-status">
+          <div class="section-head">
+            <h3>同步状态</h3>
+            <button id="reset-cursor-btn" class="text-btn" type="button">重置游标</button>
+          </div>
+          <div id="sync-status" class="sync-status-body">
+            <span class="status-dot idle"></span>
+            <span>尚未同步</span>
+          </div>
+          <div id="sync-progress" class="sync-progress" hidden>
+            <div class="sync-progress-track">
+              <span id="sync-progress-bar"></span>
+            </div>
+            <p id="sync-stage" class="muted small"></p>
+          </div>
+          <p id="last-sync" class="muted small">暂无同步记录</p>
+          <p id="sync-cursor" class="muted small">游标：暂无</p>
+        </section>
+
+        <section class="rail-section usage-block">
+          <div class="section-head">
+            <h3>模型用量</h3>
+            <button id="reset-usage-btn" class="text-btn" type="button">清零</button>
+          </div>
+          <div id="usage-summary" class="usage-summary"></div>
+        </section>
+      </aside>
+
+      <section class="calendar-workspace">
+        <div class="calendar-toolbar">
+          <button id="prev-btn" class="icon-btn" type="button" aria-label="上一页">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <button id="today-btn" class="btn btn-ghost" type="button">今天</button>
+          <button id="next-btn" class="icon-btn" type="button" aria-label="下一页">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <h1 id="calendar-title">--</h1>
+          <a id="export-link" class="btn btn-ghost export-link" href="/api/export.ics">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+            </svg>
+            导出 ICS
+          </a>
+        </div>
+        <div id="calendar-weekdays" class="calendar-weekdays" hidden></div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+      </section>
+    </main>
+
+    <div id="detail-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h2 id="detail-title">事件详情</h2>
+          <button class="icon-btn" type="button" data-close aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div id="detail-body"></div>
+        <div class="modal-actions">
+          <button id="toggle-status-btn" class="btn btn-secondary" type="button">标记完成</button>
+          <button id="edit-event-btn" class="btn btn-secondary" type="button">编辑</button>
+          <button id="delete-event-btn" class="btn btn-danger" type="button">删除事件</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="event-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h2>添加事件</h2>
+          <button class="icon-btn" type="button" data-close aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form id="event-form" class="form-grid">
+          <label>
+            <span>标题</span>
+            <input name="title" required placeholder="例如：产品评审" />
+          </label>
+          <div class="form-row">
+            <label>
+              <span>开始时间</span>
+              <input name="start" type="datetime-local" required />
+            </label>
+            <label>
+              <span>结束时间</span>
+              <input name="end" type="datetime-local" />
+            </label>
+          </div>
+          <label>
+            <span>类型</span>
+            <select name="type">
+              <option value="interview">面试</option>
+              <option value="assessment">测评</option>
+              <option value="event">活动</option>
+              <option value="meeting">会议</option>
+              <option value="deadline">截止</option>
+              <option value="other">其他</option>
+            </select>
+          </label>
+          <label class="span-2">
+            <span>备注</span>
+            <textarea name="description" rows="3"></textarea>
+          </label>
+          <div class="form-actions span-2">
+            <button class="btn btn-primary" type="submit">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="settings-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel modal-wide">
+        <div class="modal-head">
+          <h2>设置</h2>
+          <button class="icon-btn" type="button" data-close aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form id="settings-form" class="form-grid">
+          <fieldset>
+            <legend>邮箱</legend>
+            <label>
+              <span>邮箱服务商</span>
+              <select name="email_provider"></select>
+            </label>
+            <p id="email-auth-hint" class="field-hint"></p>
+            <div class="form-row">
+              <label>
+                <span>QQ 邮箱</span>
+                <input name="email" type="email" placeholder="name@qq.com" />
+              </label>
+              <label>
+                <span>IMAP 授权码</span>
+                <input name="auth_code" type="password" placeholder="已保存，输入新值覆盖" />
+              </label>
+            </div>
+            <label>
+              <span>邮箱网页入口</span>
+              <input name="mailbox_web_url" type="url" placeholder="https://mail.qq.com/" />
+            </label>
+            <p class="field-hint">QQ 邮箱的单封邮件 sid 会随登录态失效，请填邮箱首页；点击事件里的“下载原始邮件”可查看 .eml 原文。</p>
+            <div class="form-row">
+              <label>
+                <span>IMAP 服务器</span>
+                <input name="imap_host" />
+              </label>
+              <label>
+                <span>端口</span>
+                <input name="imap_port" type="number" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                <span>拉取邮件数量</span>
+                <input name="fetch_limit" type="number" min="5" max="200" />
+              </label>
+              <label class="check-field">
+                <input name="auto_sync" type="checkbox" />
+                <span>自动同步</span>
+              </label>
+            </div>
+            <label>
+              <span>同步间隔（分钟）</span>
+              <input name="sync_interval_minutes" type="number" min="5" />
+            </label>
+            <label>
+              <span>日志级别</span>
+              <select name="log_level">
+                <option value="INFO">INFO（默认，不打印调试）</option>
+                <option value="DEBUG">DEBUG（测试时使用）</option>
+              </select>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>缓存与保留</legend>
+            <div class="form-row">
+              <label>
+                <span>模型缓存有效期（小时）</span>
+                <input name="cache_model_ttl" type="number" min="1" />
+              </label>
+              <label>
+                <span>日志保留天数</span>
+                <input name="cache_log_retention" type="number" min="1" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                <span>事件保留天数</span>
+                <input name="cache_event_retention" type="number" min="1" />
+              </label>
+              <label>
+                <span>自动清理间隔（小时）</span>
+                <input name="cache_cleanup_interval" type="number" min="1" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>模型配置</legend>
+            <div class="form-row">
+              <label class="check-field">
+                <input name="model_enabled" type="checkbox" />
+                <span>使用模型提取事件</span>
+              </label>
+              <button id="refresh-models-btn" class="btn btn-secondary" type="button">获取可用模型</button>
+            </div>
+            <div class="form-row">
+              <label>
+                <span>模型厂家</span>
+                <select name="model_provider"></select>
+              </label>
+              <label>
+                <span>模型名称</span>
+                <select name="model_name"></select>
+              </label>
+            </div>
+            <p id="model-auth-hint" class="field-hint"></p>
+            <label>
+              <span>API Base</span>
+              <input name="api_base" type="url" />
+            </label>
+            <label>
+              <span>API Key</span>
+              <input name="api_key" type="password" placeholder="已保存，输入新值覆盖" />
+            </label>
+          </fieldset>
+
+          <div class="form-actions span-2">
+            <button id="test-connection-btn" class="btn btn-secondary" type="button">测试连接</button>
+            <button class="btn btn-primary" type="submit">保存设置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="admin-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel modal-wide admin-panel">
+        <div class="modal-head">
+          <h2>后台控制台</h2>
+          <button class="icon-btn" type="button" data-close aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div id="admin-stats" class="admin-stats"></div>
+        <div class="admin-layout">
+          <nav class="admin-nav" aria-label="后台功能">
+            <button class="admin-nav-btn active" type="button" data-admin-tab="logs">运行日志</button>
+            <button class="admin-nav-btn" type="button" data-admin-tab="usage">Token 用量</button>
+            <button class="admin-nav-btn" type="button" data-admin-tab="mail">邮件统计</button>
+            <button class="admin-nav-btn" type="button" data-admin-tab="cache">缓存管理</button>
+          </nav>
+          <section class="admin-content">
+            <div id="admin-pane-logs" class="admin-pane active">
+              <div class="admin-toolbar">
+                <h3>运行日志</h3>
+                <div class="admin-filter">
+                  <select id="admin-log-level" aria-label="日志级别">
+                    <option value="">全部级别</option>
+                    <option value="DEBUG">DEBUG</option>
+                    <option value="INFO">INFO</option>
+                    <option value="WARNING">WARNING</option>
+                    <option value="ERROR">ERROR</option>
+                  </select>
+                  <button id="admin-log-refresh" class="btn btn-secondary" type="button">刷新</button>
+                </div>
+              </div>
+              <div id="admin-logs" class="admin-log-table-wrap">加载中</div>
+            </div>
+            <div id="admin-pane-usage" class="admin-pane">
+              <div class="admin-toolbar">
+                <h3>Token 用量</h3>
+                <button id="admin-reset-usage" class="btn btn-danger" type="button">清零用量</button>
+              </div>
+              <div id="admin-usage" class="admin-table-wrap"></div>
+            </div>
+            <div id="admin-pane-mail" class="admin-pane">
+              <div class="admin-toolbar">
+                <h3>邮件统计</h3>
+                <button id="admin-reset-cursor" class="btn btn-secondary" type="button">重置游标</button>
+              </div>
+              <div id="admin-mail" class="admin-mail-grid"></div>
+            </div>
+            <div id="admin-pane-cache" class="admin-pane">
+              <div class="admin-toolbar">
+                <h3>缓存管理</h3>
+              </div>
+              <p id="admin-retention-info" class="muted small"></p>
+              <div class="admin-cache-grid">
+                <button class="cache-action" type="button" data-clear-target="models">清空模型缓存</button>
+                <button class="cache-action" type="button" data-clear-target="logs">清空日志</button>
+                <button class="cache-action" type="button" data-clear-target="usage">重置 Token 统计</button>
+                <button class="cache-action" type="button" data-clear-target="cursor">重置同步游标</button>
+                <button class="cache-action" type="button" data-clear-target="events">清空日历事件</button>
+                <button class="cache-action" type="button" data-clear-target="expired">按保留策略清理过期数据</button>
+                <button class="cache-action danger" type="button" data-clear-target="all">全部清理</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <div id="event-tooltip" class="event-tooltip" hidden></div>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>

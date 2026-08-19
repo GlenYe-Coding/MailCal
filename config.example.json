@@ -1,0 +1,25 @@
+{
+  "email_provider": "qq",
+  "email": "name@qq.com",
+  "auth_code": "your-qq-auth-code",
+  "imap_host": "imap.qq.com",
+  "imap_port": 993,
+  "mailbox_web_url": "https://mail.qq.com/",
+  "fetch_limit": 100,
+  "auto_sync": true,
+  "sync_interval_minutes": 30,
+  "log_level": "INFO",
+  "cache": {
+    "model_cache_ttl_hours": 24,
+    "log_retention_days": 7,
+    "event_retention_days": 30,
+    "cleanup_interval_hours": 24
+  },
+  "model": {
+    "enabled": false,
+    "provider": "openai",
+    "api_base": "https://api.openai.com/v1",
+    "api_key": "your-api-key",
+    "model_name": "gpt-4.1-mini"
+  }
+}

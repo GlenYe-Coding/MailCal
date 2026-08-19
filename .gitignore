@@ -1,0 +1,13 @@
+.env
+config.json
+data/
+logs/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+.playwright-cli/
+output/
+screenshot.png
+static/assets/mailcal.png
+docs/csdn/

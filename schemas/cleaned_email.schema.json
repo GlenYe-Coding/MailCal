@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/mailcal/cleaned-email.schema.json",
+  "title": "Cleaned Email Message",
+  "type": "object",
+  "required": ["id", "date", "from", "to", "subject", "body"],
+  "properties": {
+    "id": {"type": "string"},
+    "date": {"type": "string", "format": "date-time"},
+    "from": {"type": "string"},
+    "to": {"type": "string"},
+    "subject": {"type": "string"},
+    "body": {"type": "string", "description": "纯文本，不含 HTML 标签"}
+  }
+}
