@@ -57,103 +57,11 @@ python src/app.py --host 127.0.0.1 --port 5173
 
 Windows 可直接运行 `scripts/start.bat` 或 `scripts/start.ps1`。
 
-## 详细使用教程
+## 博客教程
 
-### 1. 获取 QQ 邮箱授权码
+详细教程：[秋招自救指南：用 MailCal 把 QQ 邮箱变成 AI 日历，面试测评自动进日程](https://blog.csdn.net/web14786210723/article/details/163896820?spm=1001.2014.3001.5502)
 
-打开 <https://mail.qq.com/>，进入 **设置 → 账号与安全 → 安全设置**，开启 **POP3/IMAP/SMTP/Exchange/CardDAV 服务**，然后点击 **生成授权码**。
-
-**`auth_code` 填写的是 QQ 邮箱授权码，不是登录密码。**
-
-### 2. 配置文件
-
-复制示例配置：
-
-```bash
-copy config.example.json config.json
-```
-
-编辑 `config.json`：
-
-```json
-{
-  "email_provider": "qq",
-  "email": "name@qq.com",
-  "auth_code": "your-qq-auth-code",
-  "imap_host": "imap.qq.com",
-  "imap_port": 993
-}
-```
-
-可选模型配置：
-
-```json
-{
-  "model": {
-    "enabled": true,
-    "provider": "deepseek",
-    "api_base": "https://api.deepseek.com/v1",
-    "api_key": "your-api-key",
-    "model_name": "deepseek-chat"
-  }
-}
-```
-
-### 3. 启动项目
-
-启动 Web 界面：
-
-```bash
-python src/app.py --host 127.0.0.1 --port 5173
-```
-
-浏览器打开 <http://127.0.0.1:5173>。
-
-![MailCal 日历主界面](docs/images/mailcal-main.png)
-
-启动 MCP 服务：
-
-```bash
-python src/mcp_server.py --http --port 5174
-```
-
-### 4. 配置邮箱和模型
-
-点击右上角 **设置**，填写 QQ 邮箱、授权码、IMAP 服务器、模型厂家、API Base 和 API Key。
-
-![MailCal 设置页面](docs/images/mailcal-settings.png)
-
-### 5. 同步邮件
-
-点击顶部 **同步邮件**，MailCal 会通过 IMAP 增量拉取邮件，并自动把可行动的邮件清洗成日历事件。
-
-左侧会显示：
-
-- 上次同步时间
-- 同步游标 UID
-- 已同步邮件数量
-
-### 6. 查看日历事件
-
-鼠标悬停事件可快速查看摘要。
-
-![事件悬浮摘要](docs/images/mailcal-tooltip.png)
-
-点击事件可展开完整详情，包括时间、类型、状态、来源邮件、发件人、说明、邮件链接和邮件原文。
-
-![事件详情展开](docs/images/mailcal-event-detail.png)
-
-### 7. 手动添加事件
-
-点击顶部 **添加事件**，填写标题、开始时间、结束时间、类型和备注后保存。
-
-![手动添加事件](docs/images/mailcal-add-event.png)
-
-### 8. 后台控制台
-
-点击顶部 **后台**，可以查看运行日志、Token 用量、邮件统计和缓存清理。
-
-![后台控制台](docs/images/mailcal-admin.png)
+QQ 邮箱授权码配置：[QQ 邮箱 IMAP 配置教程](https://blog.csdn.net/web14786210723/article/details/163896750?spm=1011.2124.3001.6209)
 
 ## REST API
 
