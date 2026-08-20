@@ -106,7 +106,7 @@ def fetch_new_messages(config: dict, cursor: dict | None = None, limit: int | No
     conn.select("INBOX", readonly=True)
     last_uid = int((cursor or {}).get("last_uid", 0) or 0)
     if last_uid:
-        typ, data = conn.uid("search", None, f"{last_uid + 1}:*")
+        typ, data = conn.uid("search", None, f"UID {last_uid + 1}:*")
     else:
         typ, data = conn.uid("search", None, "ALL")
     if typ != "OK" or not data or not data[0]:
